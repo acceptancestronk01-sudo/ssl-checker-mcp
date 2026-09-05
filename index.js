@@ -321,7 +321,7 @@ function paymentRequired(res) {
       currency: PAYMENT_CONFIG.currency,
       payTo: PAYMENT_CONFIG.payTo
     },
-    instructions: 'Include payment proof in X-Payment-Proof header'
+    instructions: 'Include payment signature in PAYMENT-SIGNATURE header (x402 v2) or X-PAYMENT header (x402 v1)'
   });
 }
 
@@ -421,7 +421,7 @@ function getSecurityGrade(data) {
 
 // SSL check endpoint with payment requirement
 app.post('/api/check', async (req, res) => {
-  const paymentProof = req.headers['x-payment-proof'];
+  const paymentProof = req.headers['payment-signature'] || req.headers['x-payment'];
 
   if (!paymentProof) {
     return paymentRequired(res);
@@ -484,7 +484,7 @@ app.post('/api/check', async (req, res) => {
 
 // Detailed SSL info endpoint with payment requirement
 app.post('/api/detailed', async (req, res) => {
-  const paymentProof = req.headers['x-payment-proof'];
+  const paymentProof = req.headers['payment-signature'] || req.headers['x-payment'];
 
   if (!paymentProof) {
     return paymentRequired(res);
