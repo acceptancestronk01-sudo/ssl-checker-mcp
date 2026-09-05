@@ -17,7 +17,7 @@ Check SSL/TLS certificates, monitor expiration, verify certificate chains, and a
 
 ## 📡 Live Endpoint
 
-**Base URL**: `https://ssl-checker-mcp.vercel.app` (will be updated after deployment)
+**Base URL**: `https://ssl-checker-mcp.vercel.app`
 
 ### Check SSL Certificate
 
@@ -388,7 +388,7 @@ MIT
 
 ## 🔗 Links
 
-- **Live API**: https://ssl-checker-mcp.vercel.app (will be updated)
+- **Live API**: https://ssl-checker-mcp.vercel.app
 - **x402 Bazaar**: https://x402bazaar.app
 - **MCP Protocol**: https://modelcontextprotocol.io
 - **Base Network**: https://base.org
