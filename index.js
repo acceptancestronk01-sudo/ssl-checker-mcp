@@ -2,6 +2,7 @@ import express from 'express';
 import tls from 'tls';
 import https from 'https';
 import dotenv from 'dotenv';
+import { verifyPayment } from '@x402/evm';
 
 dotenv.config();
 
@@ -427,6 +428,29 @@ app.post('/api/check', async (req, res) => {
     return paymentRequired(res);
   }
 
+  // Verify payment on-chain
+  try {
+    const isValidPayment = await verifyPayment({
+      proof: paymentProof,
+      expectedAmount: PAYMENT_CONFIG.price,
+      expectedCurrency: PAYMENT_CONFIG.currency,
+      expectedRecipient: PAYMENT_CONFIG.payTo,
+      chainId: PAYMENT_CONFIG.chainId
+    });
+
+    if (!isValidPayment) {
+      return res.status(402).json({
+        error: 'Payment verification failed',
+        message: 'Invalid or insufficient payment proof'
+      });
+    }
+  } catch (error) {
+    return res.status(402).json({
+      error: 'Payment verification error',
+      message: error.message || 'Could not verify payment'
+    });
+  }
+
   const { domain } = req.body;
 
   if (!domain) {
@@ -488,6 +512,29 @@ app.post('/api/detailed', async (req, res) => {
 
   if (!paymentProof) {
     return paymentRequired(res);
+  }
+
+  // Verify payment on-chain
+  try {
+    const isValidPayment = await verifyPayment({
+      proof: paymentProof,
+      expectedAmount: PAYMENT_CONFIG.price,
+      expectedCurrency: PAYMENT_CONFIG.currency,
+      expectedRecipient: PAYMENT_CONFIG.payTo,
+      chainId: PAYMENT_CONFIG.chainId
+    });
+
+    if (!isValidPayment) {
+      return res.status(402).json({
+        error: 'Payment verification failed',
+        message: 'Invalid or insufficient payment proof'
+      });
+    }
+  } catch (error) {
+    return res.status(402).json({
+      error: 'Payment verification error',
+      message: error.message || 'Could not verify payment'
+    });
   }
 
   const { domain } = req.body;
